@@ -7,9 +7,17 @@
     padding-inline: clamp(1.5rem, 4vw, 3rem);
   }
 
+  .public-footer__main {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.5rem;
+  }
+
+  .public-footer__identity { grid-column: 1 / -1; }
+
   .home-page {
-    width: min(100% - 3rem, var(--content-width));
-    padding-block: clamp(3rem, 8vh, 5.5rem);
+    width: 100%;
+    margin-inline: 0;
+    padding-block: 0 clamp(3rem, 8vh, 5.5rem);
   }
 
   .welcome-panel {

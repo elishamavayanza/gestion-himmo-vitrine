@@ -12,9 +12,9 @@ H‑Immo décide si une organisation est visible et si une annonce est publiée 
 
 ## État du code
 
-Le dépôt a déjà une entrée React/Vite, une page d’accueil de démarrage, des styles partagés, un client HTTP basé sur fetch et une configuration de proxy locale. Les répertoires catalogue, annonces, organisations et demandes sont préparés ; ils ne signifient pas que ces parcours sont déjà terminés.
+Le dépôt contient une entrée React/Vite, une navigation publique, un client HTTP basé sur fetch, une configuration de proxy locale et des parcours connectés aux trois routes publiques H‑Immo : accueil d’une organisation, catalogue paginé filtré et détail d’annonce. L’accès à une vitrine se fait actuellement avec son slug public. Les fonctionnalités d’annuaire général et de recherche multi-organisation attendent des endpoints backend dédiés.
 
-React Router et TanStack Query figurent dans les dépendances, mais ne sont pas encore branchés au squelette. Les routes UI proposées ci-dessous sont des conventions de navigation possibles, pas des pages actuellement garanties.
+React Router est utilisé pour les routes de l’interface. TanStack Query reste installé mais n’est pas nécessaire au chargement actuel.
 
 ## Structure
 
@@ -45,7 +45,7 @@ Vite utilise assets/app comme racine et l’alias @ désigne assets/react.
 
 ## Routes d’interface envisagées
 
-Les chemins suivants sont une proposition de routage frontend à valider pendant l’implémentation :
+Routes frontend implémentées ou prévues :
 
 - / : accueil ou catalogue public
 - /organisations/:slug : présentation d’une organisation et ses annonces

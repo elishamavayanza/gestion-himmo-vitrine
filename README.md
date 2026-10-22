@@ -6,7 +6,7 @@ H‑Immo reste la source de vérité pour les organisations, les biens, leur dis
 
 ## État actuel
 
-Le dépôt contient le socle React/Vite/TypeScript, une mise en page publique de démarrage, un client HTTP JSON et les répertoires prévus pour les fonctionnalités. Les parcours complets de recherche, de détail, de page organisation et d’envoi d’une demande restent à construire.
+Le dépôt contient une vitrine React/Vite/TypeScript connectée aux routes publiques H‑Immo de présentation d’organisation, de catalogue paginé et de détail d’annonce. Le catalogue est actuellement consultable par slug d’organisation. La recherche multi-organisation, l’annuaire global et l’envoi de demandes restent à construire avec des endpoints backend dédiés.
 
 L’API H‑Immo possède déjà des routes publiques de consultation pour une vitrine d’organisation et ses annonces. Il n’existe pas encore de route publique de création de demande client. La documentation décrit donc le contrat disponible et marque explicitement les parcours à venir.
 

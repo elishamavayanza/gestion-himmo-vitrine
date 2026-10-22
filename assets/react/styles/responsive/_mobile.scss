@@ -4,26 +4,33 @@
 @media (max-width: bp.$breakpoint-mobile-navigation) {
   .public-header {
     min-height: 0;
-    align-items: flex-start;
-    flex-direction: column;
+    align-items: center;
+    flex-direction: row;
     gap: var(--space-3);
-    padding: 1rem;
-  }
-
-  .public-header nav {
-    width: 100%;
-    justify-content: space-between;
+    padding: 0.75rem 1rem;
   }
 
   .public-footer {
-    flex-direction: column;
-    padding: 1rem;
+    padding: 2rem 1rem 1rem;
   }
 
+  .public-footer__main { grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+  .public-footer__identity { grid-column: 1 / -1; }
+  .public-footer__bottom { flex-direction: column; }
+
   .home-page {
-    width: min(100% - 2rem, var(--content-width));
-    padding-block: clamp(2.5rem, 12vw, 4rem);
+    width: 100%;
+    padding-top: 0;
   }
+
+  .home-hero { grid-template-columns: 1fr; gap: var(--space-5); }
+  .home-hero h1 { font-size: clamp(2.3rem, 11vw, 3.75rem); }
+  .catalogue-filters { grid-template-columns: repeat(2, minmax(0, 1fr)); padding: var(--space-4); }
+  .listing-grid, .about-principles { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .organization-hero { grid-template-columns: auto minmax(0, 1fr); }
+  .organization-hero__actions { grid-column: 1 / -1; justify-items: stretch; }
+  .organization-contact { align-items: flex-start; flex-direction: column; }
+  .organization-contact__actions { text-align: left; }
 
   .ui-card--padding-large > .ui-card__header,
   .ui-card--padding-large > .ui-card__body,
@@ -34,34 +41,72 @@
 
 @media (max-width: bp.$breakpoint-mobile) {
   .home-page {
-    width: calc(100% - 1.25rem);
-    padding-block: 2.25rem;
+    width: 100%;
+    padding-top: 0;
   }
 
-  .welcome-panel h1 {
-    font-size: clamp(1.85rem, 9vw, 2.6rem);
-    letter-spacing: -0.035em;
-  }
-
-  .welcome-copy {
-    margin-top: 1rem;
-    font-size: var(--font-size-md);
-  }
-
-  .setup-note {
-    max-width: 100%;
-    align-items: flex-start;
-    border-radius: var(--radius-md);
-    text-align: left;
-    overflow-wrap: anywhere;
-  }
-
-  .ui-button {
-    max-width: 100%;
-    white-space: normal;
-  }
+  .public-page { width: calc(100% - 1.25rem); padding-block: 2rem; }
+  .catalogue-filters, .listing-grid, .about-principles { grid-template-columns: 1fr; }
+  .catalogue-filters__actions { flex-direction: column; }
+  .catalogue-filters__actions .ui-button { width: 100%; }
+  .catalogue-summary { flex-direction: column; gap: 0.25rem; }
+  .listing-detail__heading { align-items: flex-start; flex-direction: column; gap: var(--space-2); }
+  .listing-gallery { grid-template-columns: 1fr; }
+  .listing-gallery img { height: auto; max-height: 24rem; aspect-ratio: 4 / 3; }
+  .listing-facts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .organization-hero__logo, .organization-hero__mark { width: 3.5rem; height: 3.5rem; }
 
   .ui-theme-toggle {
     min-height: 2.35rem;
   }
+}
+
+@media (max-width: bp.$breakpoint-mobile-navigation) {
+  .public-header {
+    position: sticky;
+    flex-wrap: nowrap;
+    gap: var(--space-2);
+  }
+
+  .public-header__actions { margin-left: auto; gap: 0.5rem; }
+
+  .public-header__actions .ui-theme-toggle {
+    min-height: 2.5rem;
+    padding-inline: 0.65rem;
+  }
+
+  .public-menu-toggle {
+    display: inline-grid;
+    width: 2.75rem;
+    height: 2.75rem;
+    place-items: center;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    background: var(--color-surface);
+    color: var(--color-text);
+    font-size: 1.25rem;
+  }
+
+  .public-menu-toggle:focus-visible { outline: 3px solid var(--color-focus); outline-offset: 2px; }
+
+  .public-navigation {
+    display: none;
+    position: absolute;
+    z-index: 1;
+    top: calc(100% + 0.5rem);
+    right: 1rem;
+    left: 1rem;
+    align-items: stretch;
+    flex-direction: column;
+    gap: 0.25rem;
+    padding: 0.5rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    background: var(--color-surface-raised);
+    box-shadow: var(--shadow-popover);
+  }
+
+  .public-navigation--open { display: flex; }
+  .public-navigation a { padding: 0.75rem; border-radius: var(--radius-sm); }
+  .public-navigation a:hover, .public-navigation a:focus-visible { background: var(--color-primary-soft); }
 }

@@ -1,4 +1,4 @@
-# Socle visuel de H‑Immo Vitrine
+# Socle visuel de H‑Immo Habitat
 
 Le design system de la vitrine reprend les bons principes d’organisation utilisés dans H‑Immo, avec ses propres composants et une palette adaptée à un site public. Il ne copie pas les pages ni l’ensemble de la bibliothèque de l’application de gestion.
 
@@ -7,6 +7,8 @@ Le design system de la vitrine reprend les bons principes d’organisation utili
 Les variables sémantiques sont centralisées dans assets/react/styles/base/_tokens.scss. Le thème clair utilise des surfaces blanc cassé légèrement teintées de vert et un accent vert canard profond. Le thème sombre utilise des surfaces anthracite verdies et un accent menthe adouci. Les composants consomment les rôles sémantiques (surface, texte, bordure, accent, focus), pas les valeurs de couleur directement.
 
 Le thème suit la préférence système au premier accès, peut être basculé dans l’en-tête et mémorise le choix dans localStorage. Le provider met à jour l’attribut data-theme et la couleur de la barre du navigateur.
+
+La page d’accueil utilise une photographie d’immeuble résidentiel publiée sur Unsplash. L’image est décorative et son contenu ne représente pas une annonce publiée dans H‑Immo.
 
 ## Composants de base créés
 

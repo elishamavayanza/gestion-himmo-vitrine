@@ -10,7 +10,7 @@
 
 @media (orientation: portrait) and (min-width: bp.$breakpoint-tablet) and (max-width: bp.$breakpoint-desktop - 1) {
   .home-page {
-    padding-block: clamp(4rem, 10vh, 7rem);
+    padding-block: 0 clamp(3rem, 8vh, 6rem);
   }
 
   .welcome-panel {

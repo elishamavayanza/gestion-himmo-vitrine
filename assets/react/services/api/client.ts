@@ -19,8 +19,8 @@ export async function request<T>(path: string, options: RequestOptions = {}): Pr
   })
 
   if (!response.ok) {
-    const payload = await response.json().catch(() => null) as { message?: string; details?: unknown } | null
-    throw new ApiError(payload?.message ?? `La requête a échoué (${response.status}).`, response.status, payload?.details)
+    const payload = await response.json().catch(() => null) as { message?: string; flushDescription?: string; flush?: string; details?: unknown } | null
+    throw new ApiError(payload?.message ?? payload?.flushDescription ?? payload?.flush ?? `La requête a échoué (${response.status}).`, response.status, payload?.details)
   }
 
   if (response.status === 204) return undefined as T

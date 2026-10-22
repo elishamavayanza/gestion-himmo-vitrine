@@ -43,7 +43,7 @@ Paramètres facultatifs :
 | Paramètre | Type et sens |
 | --- | --- |
 | city | code de ville |
-| type | apartment, office ou commercial |
+| type | valeurs de `UnitType` : apartment, house, shop, office, restaurant, room, warehouse, workshop, storage, parking ou other |
 | bedrooms | nombre minimum de chambres |
 | minRent, maxRent | bornes de loyer décimal |
 | currency | USD ou CDF |
@@ -80,3 +80,10 @@ Avant d’implémenter ce parcours, définir côté H‑Immo le contrat, la vali
 - Respecter le code HTTP : 404 n’est pas une liste vide si l’organisation ou l’annonce n’existe pas.
 - Les valeurs de l’API sont externes : prévoir absence de photos, textes facultatifs, résultats vides et erreurs réseau.
 - Garder les montants décimaux comme chaînes et afficher la devise fournie.
+
+
+## Besoins du catalogue central
+
+Les routes actuelles sont toutes bornées à un slug d’organisation. Elles ne fournissent pas d’annuaire d’organisations publiques, de recherche transversale, ni de facettes pays/villes pour toutes les organisations. Le catalogue global de Ma Vitrine ne doit pas agréger les vitrines en téléchargeant les annonces organisation par organisation dans le navigateur. Il faudra définir un endpoint paginé et filtré côté Symfony, avec une réponse publique minimale contenant notamment le slug et le nom public de l’organisation responsable.
+
+Le modèle d’unité actuel ne contient qu’un `monthlyRent` et une devise. Il ne permet donc pas d’afficher des biens en vente ni de mélanger location et vente dans le filtre de transaction. Les favoris synchronisés, la demande de contact et la réservation nécessitent également un contrat serveur dédié.

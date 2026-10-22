@@ -1,9 +1,10 @@
 @use '../base/breakpoints' as bp;
 
-// Écrans d’ordinateur : conserver une largeur de lecture maîtrisée.
+// La bannière d’accueil reste bord à bord sur les écrans d’ordinateur.
 @media (min-width: bp.$breakpoint-desktop) {
   .home-page {
-    width: min(100% - 4rem, var(--content-width));
+    width: 100%;
+    margin-inline: 0;
   }
 
   .public-header,
@@ -14,12 +15,12 @@
 
 @media (min-width: bp.$breakpoint-large) {
   .home-page {
-    width: min(100% - 5rem, 82rem);
+    width: 100%;
   }
 }
 
 @media (min-width: bp.$breakpoint-xlarge) {
   .home-page {
-    width: min(100% - 6rem, 90rem);
+    width: 100%;
   }
 }
