@@ -1,0 +1,10 @@
+// Seuils alignés sur le design system H-Immo.
+// Miroir de assets/react/services/device.ts ; garder ces valeurs synchronisées.
+// Les adaptations réelles restent dans responsive/ ou dans le style propre à une page.
+$breakpoint-mobile: 480px;
+$breakpoint-mobile-navigation: 600px;
+$breakpoint-tablet: 768px;
+$breakpoint-desktop: 1024px;
+$breakpoint-medium-desktop: 1200px;
+$breakpoint-large: 1440px;
+$breakpoint-xlarge: 1920px;

@@ -1,0 +1,67 @@
+@use '../base/breakpoints' as bp;
+
+// Téléphones et navigation compacte.
+@media (max-width: bp.$breakpoint-mobile-navigation) {
+  .public-header {
+    min-height: 0;
+    align-items: flex-start;
+    flex-direction: column;
+    gap: var(--space-3);
+    padding: 1rem;
+  }
+
+  .public-header nav {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .public-footer {
+    flex-direction: column;
+    padding: 1rem;
+  }
+
+  .home-page {
+    width: min(100% - 2rem, var(--content-width));
+    padding-block: clamp(2.5rem, 12vw, 4rem);
+  }
+
+  .ui-card--padding-large > .ui-card__header,
+  .ui-card--padding-large > .ui-card__body,
+  .ui-card--padding-large > .ui-card__footer {
+    padding: var(--space-4);
+  }
+}
+
+@media (max-width: bp.$breakpoint-mobile) {
+  .home-page {
+    width: calc(100% - 1.25rem);
+    padding-block: 2.25rem;
+  }
+
+  .welcome-panel h1 {
+    font-size: clamp(1.85rem, 9vw, 2.6rem);
+    letter-spacing: -0.035em;
+  }
+
+  .welcome-copy {
+    margin-top: 1rem;
+    font-size: var(--font-size-md);
+  }
+
+  .setup-note {
+    max-width: 100%;
+    align-items: flex-start;
+    border-radius: var(--radius-md);
+    text-align: left;
+    overflow-wrap: anywhere;
+  }
+
+  .ui-button {
+    max-width: 100%;
+    white-space: normal;
+  }
+
+  .ui-theme-toggle {
+    min-height: 2.35rem;
+  }
+}

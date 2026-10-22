@@ -1,0 +1,4 @@
+@use './Field';
+
+.ui-field__select { cursor: pointer; }
+.ui-field__select option { color: var(--color-text); background: var(--color-surface-raised); }

@@ -1,0 +1,23 @@
+// Paysage court : réduire les marges verticales pour garder le contenu principal visible.
+@media (orientation: landscape) and (max-height: 600px) {
+  .public-header {
+    min-height: 3.5rem;
+    padding-block: 0.5rem;
+  }
+
+  .home-page {
+    padding-block: clamp(1.25rem, 5vh, 2.5rem);
+  }
+
+  .welcome-copy {
+    margin-top: 0.9rem;
+  }
+
+  .setup-note {
+    margin-top: 1.25rem;
+  }
+
+  .public-footer {
+    padding-block: 0.85rem;
+  }
+}

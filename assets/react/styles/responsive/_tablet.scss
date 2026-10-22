@@ -1,0 +1,18 @@
+@use '../base/breakpoints' as bp;
+
+// Tablettes et petits écrans en largeur.
+@media (min-width: bp.$breakpoint-mobile-navigation + 1) and (max-width: bp.$breakpoint-desktop - 1) {
+  .public-header,
+  .public-footer {
+    padding-inline: clamp(1.5rem, 4vw, 3rem);
+  }
+
+  .home-page {
+    width: min(100% - 3rem, var(--content-width));
+    padding-block: clamp(3rem, 8vh, 5.5rem);
+  }
+
+  .welcome-panel {
+    max-width: 44rem;
+  }
+}

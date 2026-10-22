@@ -1,0 +1,23 @@
+.ui-field { display: grid; min-width: 0; gap: 0.4rem; }
+.ui-field__label { color: var(--color-text); font-size: var(--font-size-sm); font-weight: 650; }
+.ui-field__control {
+  width: 100%;
+  min-height: 2.75rem;
+  padding: 0.65rem 0.8rem;
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+  color: var(--color-text);
+  background: var(--color-surface);
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast), background-color var(--transition-fast);
+}
+.ui-field__control::placeholder { color: var(--color-text-subtle); }
+.ui-field__control:hover { border-color: var(--color-primary); }
+.ui-field__control:focus-visible {
+  border-color: var(--color-focus);
+  outline: none;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-focus), transparent 82%);
+}
+.ui-field__control--error { border-color: var(--color-danger); }
+.ui-field__hint, .ui-field__error { font-size: var(--font-size-xs); }
+.ui-field__hint { color: var(--color-text-subtle); }
+.ui-field__error { color: var(--color-danger); }

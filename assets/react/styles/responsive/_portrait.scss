@@ -1,0 +1,19 @@
+@use '../base/breakpoints' as bp;
+
+// Portrait : privilégier le flux vertical et éviter les zones trop tassées.
+@media (orientation: portrait) {
+  .public-layout {
+    min-height: 100vh;
+    min-height: 100svh;
+  }
+}
+
+@media (orientation: portrait) and (min-width: bp.$breakpoint-tablet) and (max-width: bp.$breakpoint-desktop - 1) {
+  .home-page {
+    padding-block: clamp(4rem, 10vh, 7rem);
+  }
+
+  .welcome-panel {
+    max-width: 42rem;
+  }
+}

@@ -1,0 +1,25 @@
+@use '../base/breakpoints' as bp;
+
+// Écrans d’ordinateur : conserver une largeur de lecture maîtrisée.
+@media (min-width: bp.$breakpoint-desktop) {
+  .home-page {
+    width: min(100% - 4rem, var(--content-width));
+  }
+
+  .public-header,
+  .public-footer {
+    padding-inline: max(2rem, calc((100vw - var(--content-width)) / 2));
+  }
+}
+
+@media (min-width: bp.$breakpoint-large) {
+  .home-page {
+    width: min(100% - 5rem, 82rem);
+  }
+}
+
+@media (min-width: bp.$breakpoint-xlarge) {
+  .home-page {
+    width: min(100% - 6rem, 90rem);
+  }
+}

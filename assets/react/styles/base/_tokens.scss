@@ -1,0 +1,83 @@
+:root,
+:root[data-theme='light'] {
+  color-scheme: light;
+  --color-page: #f3f7f5;
+  --color-surface: #ffffff;
+  --color-surface-raised: #ffffff;
+  --color-surface-soft: #eaf1ee;
+  --color-text: #18312e;
+  --color-text-muted: #60736e;
+  --color-text-subtle: #788983;
+  --color-border: #d8e3de;
+  --color-border-strong: #c2d2cb;
+  --color-primary: #167a6d;
+  --color-primary-hover: #11675d;
+  --color-primary-active: #0d584f;
+  --color-primary-soft: #e4f2ed;
+  --color-on-primary: #ffffff;
+  --color-focus: #138675;
+  --color-success: #247956;
+  --color-danger: #b7474f;
+  --color-danger-soft: #fae9e9;
+  --shadow-card: 0 10px 28px rgb(24 49 46 / 6%);
+  --shadow-popover: 0 16px 40px rgb(24 49 46 / 14%);
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --color-page: #101918;
+  --color-surface: #172220;
+  --color-surface-raised: #1d2b28;
+  --color-surface-soft: #22332f;
+  --color-text: #e8f1ed;
+  --color-text-muted: #bdcec7;
+  --color-text-subtle: #8fa29b;
+  --color-border: #30413c;
+  --color-border-strong: #435851;
+  --color-primary: #59c5aa;
+  --color-primary-hover: #72d5b9;
+  --color-primary-active: #42ad93;
+  --color-primary-soft: #203b35;
+  --color-on-primary: #10231f;
+  --color-focus: #78ddc2;
+  --color-success: #78c89a;
+  --color-danger: #ee9297;
+  --color-danger-soft: #43272b;
+  --shadow-card: 0 10px 28px rgb(0 0 0 / 18%);
+  --shadow-popover: 0 16px 40px rgb(0 0 0 / 35%);
+}
+
+:root {
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-optical-sizing: auto;
+  font-weight: 400;
+
+  --font-size-xs: 0.75rem;
+  --font-size-sm: 0.875rem;
+  --font-size-md: 1rem;
+  --font-size-lg: 1.125rem;
+  --font-size-xl: 1.375rem;
+  --font-size-2xl: clamp(1.75rem, 4vw, 2.5rem);
+  --line-height-body: 1.6;
+  --line-height-heading: 1.15;
+
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+
+  --radius-sm: 0.5rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1rem;
+  --radius-pill: 999px;
+
+  --transition-fast: 140ms ease;
+  --content-width: 76rem;
+}
