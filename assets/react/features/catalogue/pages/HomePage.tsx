@@ -108,22 +108,30 @@ export function HomePage() {
                   <SelectField label="Type d’offre" value={offerType} onChange={(event) => setOfferType(event.target.value as ListingOfferType | '')}>
                     <option value="">Location et vente</option><option value="rent">À louer</option><option value="sale">À vendre</option>
                   </SelectField>
-                  <TextField label="Prix minimum" value={minPrice} onChange={(event) => setMinPrice(event.target.value)} placeholder="Sans minimum" type="text" inputMode="decimal" />
-                  <TextField label="Prix maximum" value={maxPrice} onChange={(event) => setMaxPrice(event.target.value)} placeholder="Sans maximum" type="text" inputMode="decimal" />
-                  <SelectField label="Devise" value={currency} onChange={(event) => setCurrency(event.target.value as Currency | '')}>
-                    <option value="">Toutes les devises</option><option value="USD">USD</option><option value="CDF">CDF</option>
-                  </SelectField>
                   <Button type="submit">Rechercher les annonces</Button>
                 </div>
+                <details className="showcase-search__advanced">
+                  <summary>Budget et devise (facultatif)</summary>
+                  <div className="showcase-search__advanced-fields">
+                    <TextField label="Prix minimum" value={minPrice} onChange={(event) => setMinPrice(event.target.value)} placeholder="Sans minimum" type="text" inputMode="decimal" />
+                    <TextField label="Prix maximum" value={maxPrice} onChange={(event) => setMaxPrice(event.target.value)} placeholder="Sans maximum" type="text" inputMode="decimal" />
+                    <SelectField label="Devise" value={currency} onChange={(event) => setCurrency(event.target.value as Currency | '')}>
+                      <option value="">Toutes les devises</option><option value="USD">USD</option><option value="CDF">CDF</option>
+                    </SelectField>
+                  </div>
+                </details>
                 {searchError && <p className="showcase-search__error" role="alert">{searchError}</p>}
               </form>
-              <form id="trouver-une-vitrine" className="showcase-code" onSubmit={openShowcase}>
-                <div><h3>Vous connaissez une agence ?</h3><p>Ouvrez sa vitrine avec le code public communiqué.</p></div>
-                <div className="showcase-code__fields">
-                  <TextField label="Code de la vitrine" value={slug} onChange={(event) => setSlug(event.target.value)} placeholder="Ex. immo-plus" required autoComplete="off" />
-                  <Button type="submit" variant="secondary">Ouvrir</Button>
-                </div>
-              </form>
+              <details className="showcase-code">
+                <summary>Vous connaissez une agence ?</summary>
+                <p>Ouvrez sa vitrine avec le code public communiqué.</p>
+                <form id="trouver-une-vitrine" onSubmit={openShowcase}>
+                  <div className="showcase-code__fields">
+                    <TextField label="Code de la vitrine" value={slug} onChange={(event) => setSlug(event.target.value)} placeholder="Ex. immo-plus" required autoComplete="off" />
+                    <Button type="submit" variant="secondary">Ouvrir</Button>
+                  </div>
+                </form>
+              </details>
             </div>
           )}
         </div>

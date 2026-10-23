@@ -56,7 +56,7 @@ export function CataloguePage() {
         <h1>Trouvez un bien</h1>
         <p>{isGlobalCatalogue ? 'Parcourez les annonces publiques disponibles auprès de toutes les agences partenaires.' : 'Parcourez les biens publiés et disponibles par cette organisation.'}</p>
       </header>
-      <CatalogueFilterForm key={searchParams.toString()} initial={filters} onApply={applyFilters} globalScope={isGlobalCatalogue} />
+      <CatalogueFilterForm key={searchParams.toString()} initial={filters} onApply={applyFilters} />
       {loading && <p className="status-message" role="status">Chargement des annonces…</p>}
       {error && <EmptyState title="Annonces indisponibles" description={error} action={<Button onClick={retry}>Réessayer</Button>} />}
       {!loading && !error && result && (
