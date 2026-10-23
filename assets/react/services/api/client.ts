@@ -1,5 +1,6 @@
-import { ApiError } from './api.types'
-import { getApiBaseUrl } from './config'
+import { z } from 'zod'
+import { ApiError } from './api.types.ts'
+import { getApiBaseUrl } from './config.ts'
 
 interface RequestOptions extends Omit<RequestInit, 'body'> {
   body?: unknown
@@ -25,4 +26,10 @@ export async function request<T>(path: string, options: RequestOptions = {}): Pr
 
   if (response.status === 204) return undefined as T
   return response.json() as Promise<T>
+}
+
+/** Vérifie l'enveloppe Feedback au lieu de faire confiance au type de la réponse HTTP. */
+export async function requestFeedbackData<T>(path: string, dataSchema: z.ZodType<T>, options: RequestOptions = {}): Promise<T> {
+  const response = await request<unknown>(path, options)
+  return z.object({ data: dataSchema }).parse(response).data
 }

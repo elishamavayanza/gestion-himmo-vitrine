@@ -12,12 +12,12 @@ Les routes H‑Immo publiques sont l’autorité sur la visibilité des organisa
 - Afficher les chaînes comme du texte. Éviter les insertions HTML non échappées.
 - Vérifier qu’une URL de photo utilise un protocole attendu avant de la rendre comme lien ou source média.
 - Ne pas exposer les erreurs internes du serveur, les traces ou les détails techniques au visiteur.
-- Ne pas journaliser les coordonnées de contact ou le contenu d’un futur formulaire sans besoin défini.
+- Ne pas journaliser les coordonnées de contact ni le contenu d’un formulaire.
 - Ne pas copier les annonces ou coordonnées dans une base locale.
 
-## Demande de contact future
+## Demande de contact
 
-L’endpoint public de demande n’est pas encore disponible. Avant de le créer, H‑Immo doit définir validation serveur, limitation de débit, contrôles anti-robot adaptés, politique de conservation, accès aux demandes et protections contre l’envoi massif. Le frontend devra afficher une confirmation uniquement après succès serveur et éviter les soumissions répétées.
+La demande publique est envoyée à H‑Immo pour une annonce précise. Le backend valide les champs, vérifie à nouveau la publication et la disponibilité, limite les soumissions et applique l’idempotence. Le frontend bloque les doubles clics et affiche une confirmation uniquement après succès serveur. Une demande ne réserve pas le bien et ne crée aucun bail.
 
 Une protection côté interface améliore l’expérience mais ne remplace jamais ces contrôles backend.
 

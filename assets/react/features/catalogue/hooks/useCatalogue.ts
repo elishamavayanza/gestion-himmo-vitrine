@@ -1,13 +1,16 @@
 import { useQuery } from '@tanstack/react-query'
 import { publicRequestError } from '../../../services/api/errorMessages'
-import { getOrganizationListings } from '../services/catalogueService'
-import type { ListingFilters } from '../types/listing.types'
+import { getGlobalListings, getOrganizationListings } from '../services/catalogueService'
+import type { CataloguePageResult, ListingFilters } from '../types/listing.types'
 
 export function useCatalogue(slug: string, filters: ListingFilters) {
   const query = useQuery({
     queryKey: ['public-listings', slug, filters],
-    queryFn: () => getOrganizationListings(slug, filters),
-    enabled: slug.length > 0,
+    queryFn: async ({ signal }): Promise<CataloguePageResult> => {
+      if (!slug) return getGlobalListings(filters, signal)
+      const result = await getOrganizationListings(slug, filters, signal)
+      return { ...result, items: result.items }
+    },
   })
 
   const error = query.error

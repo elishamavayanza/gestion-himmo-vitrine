@@ -1,11 +1,10 @@
-import { request } from '../../../services/api/client'
-import type { OrganizationShowcase } from '../../../services/api/publicShowcase.types'
+import { requestFeedbackData } from '../../../services/api/client'
+import { organizationShowcaseSchema, type OrganizationShowcase } from '../../../services/api/publicShowcase.types'
 
-interface Feedback<T> { data: T }
-
-export async function getOrganizationShowcase(slug: string): Promise<OrganizationShowcase> {
-  const response = await request<Feedback<OrganizationShowcase>>(
+export async function getOrganizationShowcase(slug: string, signal?: AbortSignal): Promise<OrganizationShowcase> {
+  return requestFeedbackData(
     `public/organizations/${encodeURIComponent(slug)}/showcase`,
+    organizationShowcaseSchema,
+    { signal },
   )
-  return response.data
 }

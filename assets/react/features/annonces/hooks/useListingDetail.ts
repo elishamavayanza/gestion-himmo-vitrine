@@ -5,7 +5,7 @@ import { getPublicListing } from '../services/listingService'
 export function useListingDetail(slug: string, uuid: string) {
   const query = useQuery({
     queryKey: ['public-listing', slug, uuid],
-    queryFn: () => getPublicListing(slug, uuid),
+    queryFn: ({ signal }) => getPublicListing(slug, uuid, signal),
     enabled: slug.length > 0 && uuid.length > 0,
   })
 

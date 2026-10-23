@@ -17,6 +17,11 @@ export default defineConfig({
         target: process.env.HIMMO_API_URL ?? 'http://127.0.0.1:8000',
         changeOrigin: true,
       },
+      // Les DTO publics renvoient les chemins d’images servis par Symfony.
+      '/uploads': {
+        target: process.env.HIMMO_API_URL ?? 'http://127.0.0.1:8000',
+        changeOrigin: true,
+      },
     },
   },
 })

@@ -12,9 +12,9 @@ H‑Immo décide si une organisation est visible et si une annonce est publiée 
 
 ## État du code
 
-Le dépôt contient une entrée React/Vite, une navigation publique, un client HTTP basé sur fetch, une configuration de proxy locale et des parcours connectés aux trois routes publiques H‑Immo : accueil d’une organisation, catalogue paginé filtré et détail d’annonce. L’accès à une vitrine se fait actuellement avec son slug public. Les fonctionnalités d’annuaire général et de recherche multi-organisation attendent des endpoints backend dédiés.
+Le dépôt contient une entrée React/Vite, une navigation publique, un client HTTP basé sur fetch, une configuration de proxy locale et des parcours connectés aux routes publiques H‑Immo : présentation d’organisation, catalogue global paginé et filtré, catalogue par organisation, détail d’annonce et transmission d’une demande client. L’accueil affiche immédiatement les annonces publiques globales, sans filtre préalable ; le visiteur peut ensuite affiner sa recherche ou ouvrir la vitrine d’une organisation.
 
-React Router est utilisé pour les routes de l’interface. TanStack Query reste installé mais n’est pas nécessaire au chargement actuel.
+React Router gère les routes de l’interface et TanStack Query le chargement, la mise en cache et l’annulation des requêtes de lecture.
 
 ## Structure
 
@@ -24,7 +24,7 @@ React Router est utilisé pour les routes de l’interface. TanStack Query reste
         catalogue/         recherche et liste d’annonces
         annonces/          détail d’une annonce
         organisations/     accueil public par organisation
-        demandes/           demande de contact, après création de l’API
+        demandes/           demande publique d’information ou de visite
       components/           présentation réutilisable entre fonctionnalités
       services/api/         configuration, client HTTP et types de transport
       styles/               styles globaux
@@ -39,7 +39,7 @@ Vite utilise assets/app comme racine et l’alias @ désigne assets/react.
 - Catalogue : paramètres de recherche, filtres et état de pagination côté interface ; les résultats et le périmètre proviennent de l’API.
 - Annonces : rendu des informations et photos fournies par H‑Immo. Une annonce disparue ou non disponible doit être traitée comme telle, même si un lien ancien existe.
 - Organisations : affichage des champs de présentation publique retournés par le serveur.
-- Demandes : formulaire à réaliser uniquement après définition d’une route publique côté H‑Immo. La vitrine ne doit pas enregistrer localement ni laisser croire qu’une demande a été transmise si le serveur ne l’a pas confirmée.
+- Demandes : transmettre une demande liée à l’unité par la route publique H‑Immo ; afficher le succès uniquement après confirmation du serveur. Ce parcours ne réserve pas le bien.
 - Services API : seul endroit où centraliser le transport HTTP, les paramètres et l’interprétation commune des erreurs.
 - Composants partagés : éléments visuels communs et simples, sans y déplacer les règles de filtrage ou d’accès propres à une fonctionnalité.
 
@@ -48,9 +48,10 @@ Vite utilise assets/app comme racine et l’alias @ désigne assets/react.
 Routes frontend implémentées ou prévues :
 
 - / : accueil ou catalogue public
+- /annonces : catalogue public global, paginé et filtrable
 - /organisations/:slug : présentation d’une organisation et ses annonces
 - /organisations/:slug/annonces/:uuid : détail d’une annonce
-- /organisations/:slug/annonces/:uuid/demande : futur formulaire, après disponibilité du contrat API
+- Le formulaire de demande est intégré à la fiche `/organisations/:slug/annonces/:uuid`.
 
 Ces URL de navigateur ne sont pas les routes backend. Le backend actuel est décrit dans docs/api-h-immo.md.
 

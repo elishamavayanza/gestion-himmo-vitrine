@@ -5,7 +5,7 @@ import { getOrganizationShowcase } from '../services/organizationService'
 export function useOrganizationShowcase(slug: string) {
   const query = useQuery({
     queryKey: ['public-organization', slug],
-    queryFn: () => getOrganizationShowcase(slug),
+    queryFn: ({ signal }) => getOrganizationShowcase(slug, signal),
     enabled: slug.length > 0,
   })
 

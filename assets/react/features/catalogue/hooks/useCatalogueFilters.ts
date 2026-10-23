@@ -3,10 +3,12 @@ import type { Currency, ListingType } from '../../../services/api/publicShowcase
 import type { ListingFilters } from '../types/listing.types'
 
 export interface CatalogueFilterDraft {
+  city: string
   type: string
   bedrooms: string
-  minRent: string
-  maxRent: string
+  offerType: string
+  minPrice: string
+  maxPrice: string
   currency: string
 }
 
@@ -22,10 +24,12 @@ export function useCatalogueFilters(
   onApply: (filters: CatalogueFilterDraft) => void,
 ) {
   const [draft, setDraft] = useState<CatalogueFilterDraft>({
+    city: initial.city ?? '',
     type: initial.type ?? '',
     bedrooms: initial.bedrooms ?? '',
-    minRent: initial.minRent ?? '',
-    maxRent: initial.maxRent ?? '',
+    offerType: initial.offerType ?? (initial.minRent || initial.maxRent ? 'rent' : ''),
+    minPrice: initial.minPrice ?? initial.minRent ?? '',
+    maxPrice: initial.maxPrice ?? initial.maxRent ?? '',
     currency: initial.currency ?? '',
   })
   const [error, setError] = useState<string | null>(null)
@@ -33,10 +37,10 @@ export function useCatalogueFilters(
   function apply(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
     setError(null)
-    const minimum = draft.minRent.trim()
-    const maximum = draft.maxRent.trim()
+    const minimum = draft.minPrice.trim()
+    const maximum = draft.maxPrice.trim()
     if ((minimum || maximum) && !draft.currency) {
-      setError('Choisissez une devise pour filtrer les loyers.')
+      setError('Choisissez une devise pour filtrer les prix.')
       return
     }
     if ((minimum && !isDecimalAmount(minimum)) || (maximum && !isDecimalAmount(maximum))) {
@@ -46,7 +50,7 @@ export function useCatalogueFilters(
     const minimumUnits = minimum ? toMinorUnits(minimum) : null
     const maximumUnits = maximum ? toMinorUnits(maximum) : null
     if (minimumUnits !== null && maximumUnits !== null && minimumUnits > maximumUnits) {
-      setError('Le loyer minimum doit être inférieur ou égal au loyer maximum.')
+      setError('Le prix minimum doit être inférieur ou égal au prix maximum.')
       return
     }
     onApply(draft)
@@ -54,8 +58,8 @@ export function useCatalogueFilters(
 
   function reset() {
     setError(null)
-    setDraft({ type: '', bedrooms: '', minRent: '', maxRent: '', currency: '' })
-    onApply({ type: '', bedrooms: '', minRent: '', maxRent: '', currency: '' })
+    setDraft({ city: '', type: '', bedrooms: '', offerType: '', minPrice: '', maxPrice: '', currency: '' })
+    onApply({ city: '', type: '', bedrooms: '', offerType: '', minPrice: '', maxPrice: '', currency: '' })
   }
 
   function change<K extends keyof CatalogueFilterDraft>(key: K, value: CatalogueFilterDraft[K]) {
@@ -69,10 +73,12 @@ export function useCatalogueFilters(
     reset,
     change,
     options: {
+      city: draft.city || undefined,
       type: draft.type ? draft.type as ListingType : undefined,
       bedrooms: draft.bedrooms || undefined,
-      minRent: draft.minRent || undefined,
-      maxRent: draft.maxRent || undefined,
+      offerType: draft.offerType ? draft.offerType as 'rent' | 'sale' : undefined,
+      minPrice: draft.minPrice || undefined,
+      maxPrice: draft.maxPrice || undefined,
       currency: draft.currency ? draft.currency as Currency : undefined,
     },
   }

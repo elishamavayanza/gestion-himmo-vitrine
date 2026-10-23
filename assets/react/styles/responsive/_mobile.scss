@@ -25,6 +25,8 @@
 
   .home-hero { grid-template-columns: 1fr; gap: var(--space-5); }
   .home-hero h1 { font-size: clamp(2.3rem, 11vw, 3.75rem); }
+  .home-catalogue { padding-inline: 0.75rem; }
+  .home-catalogue__categories { justify-content: flex-start; }
   .catalogue-filters { grid-template-columns: repeat(2, minmax(0, 1fr)); padding: var(--space-4); }
   .listing-grid, .about-principles { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .organization-hero { grid-template-columns: auto minmax(0, 1fr); }
@@ -109,4 +111,13 @@
   .public-navigation--open { display: flex; }
   .public-navigation a { padding: 0.75rem; border-radius: var(--radius-sm); }
   .public-navigation a:hover, .public-navigation a:focus-visible { background: var(--color-primary-soft); }
+}
+
+
+@media (max-width: bp.$breakpoint-mobile) {
+  .inquiry-form { padding: var(--space-4); }
+  .inquiry-form__fields { grid-template-columns: 1fr; }
+  .inquiry-form__message { grid-column: auto; }
+  .inquiry-form__types { flex-direction: column; gap: var(--space-3); }
+  .inquiry-form > form > .ui-button { width: 100%; }
 }

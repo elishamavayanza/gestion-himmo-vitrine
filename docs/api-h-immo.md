@@ -45,21 +45,24 @@ Paramètres facultatifs :
 | city | code de ville |
 | type | valeurs de `UnitType` : apartment, house, shop, office, restaurant, room, warehouse, workshop, storage, parking ou other |
 | bedrooms | nombre minimum de chambres |
-| minRent, maxRent | bornes de loyer décimal |
+| offerType | `rent` (location), `sale` (vente), ou absent pour les deux |
+| minPrice, maxPrice | bornes de prix décimal, à utiliser avec une devise |
+| minRent, maxRent | anciens alias des bornes de loyer ; conservés pour compatibilité |
 | currency | USD ou CDF |
 | page | page indexée à partir de 1, valeur par défaut 1 |
 | limit | taille de page, valeur par défaut 20, maximum 100 |
 
 La réponse place dans data un objet avec items, total, page et pages. Chaque élément expose :
 
-- unitId : UUID public
+- unitId et listingId : UUID publics de l’unité et de l’annonce
+- title, offerType (`rent` ou `sale`), price et currency : données commerciales de l’annonce
 - reference, type, floor, description
-- monthlyRent : montant décimal sous forme de chaîne
-- currency, surface, bedrooms, rooms, bathrooms
+- monthlyRent : alias décimal historique du prix de location, `null` pour une vente
+- surface, bedrooms, rooms, bathrooms
 - city, buildingName
 - photos : tableau de url et position
 
-L’API limite les résultats à l’organisation demandée, aux unités publiées et sans bail actif. Une annonce louée est retirée automatiquement des résultats. Les paramètres de filtre ne sont pas une garantie de disponibilité.
+L’API limite les résultats à l’organisation demandée, aux unités publiées et sans bail actif. Une annonce louée est retirée automatiquement des résultats. Un code de ville inconnu ou inactif produit zéro résultat. Les bornes de prix exigent une devise ; sans type d’offre elles s’appliquent aux offres de cette devise, et avec `offerType` elles sont limitées à ce type. Les paramètres de filtre ne sont pas une garantie de disponibilité.
 
 ## Détail d’une annonce
 
@@ -67,11 +70,9 @@ L’API limite les résultats à l’organisation demandée, aux unités publié
 
 Retourne la même représentation publique de l’annonce. 404 signifie notamment que l’organisation ou l’annonce est inconnue, masquée, non publiée, occupée, ou que l’annonce n’appartient pas à cette organisation. Le frontend ne doit pas tenter d’en déduire la raison ni exposer l’existence d’autres ressources.
 
-## Demandes client : endpoint absent
+## Demandes client
 
-Aucune route publique de création de demande ou de réservation n’a été trouvée dans le contrôleur public vérifié. L’interface ne doit donc pas encore annoncer qu’elle peut transmettre un formulaire.
-
-Avant d’implémenter ce parcours, définir côté H‑Immo le contrat, la validation, la limitation de débit, la prévention des abus, les données personnelles conservées, la durée de conservation et les réponses de succès/erreur. La vitrine pourra ensuite appeler le nouvel endpoint public via le client API.
+Le contrat de demande client est décrit plus bas dans cette page. La demande publique concerne une annonce précise et ne réserve pas le bien, ne crée pas de bail et ne change pas sa disponibilité.
 
 ## Règles d’intégration
 
@@ -82,8 +83,32 @@ Avant d’implémenter ce parcours, définir côté H‑Immo le contrat, la vali
 - Garder les montants décimaux comme chaînes et afficher la devise fournie.
 
 
-## Besoins du catalogue central
+## Catalogue public global
 
-Les routes actuelles sont toutes bornées à un slug d’organisation. Elles ne fournissent pas d’annuaire d’organisations publiques, de recherche transversale, ni de facettes pays/villes pour toutes les organisations. Le catalogue global de Ma Vitrine ne doit pas agréger les vitrines en téléchargeant les annonces organisation par organisation dans le navigateur. Il faudra définir un endpoint paginé et filtré côté Symfony, avec une réponse publique minimale contenant notamment le slug et le nom public de l’organisation responsable.
+    GET /api/public/listings
 
-Le modèle d’unité actuel ne contient qu’un `monthlyRent` et une devise. Il ne permet donc pas d’afficher des biens en vente ni de mélanger location et vente dans le filtre de transaction. Les favoris synchronisés, la demande de contact et la réservation nécessitent également un contrat serveur dédié.
+Cette route alimente l’accueil de MaVitrine et la page `/annonces` sans demander de code d’agence. Les paramètres de recherche sont facultatifs :
+
+| Paramètre | Type et sens |
+| --- | --- |
+| type | type d’unité parmi les valeurs documentées plus haut |
+| bedrooms | nombre minimum de chambres |
+| offerType | `rent` (location) ou `sale` (vente) |
+| minPrice, maxPrice | bornes décimales utilisées avec une devise |
+| currency | USD ou CDF |
+| page | page indexée à partir de 1 |
+| limit | taille de page, maximum 100 |
+
+La réponse `data` utilise la pagination habituelle (`items`, `total`, `page`, `pages`). Chaque élément contient `organizationSlug`, `organizationName` et `listing`, dont les champs correspondent à `PublicListingResponse`. Le détail reste rattaché à la vitrine de l’agence : `/organisations/{organizationSlug}/annonces/{unitId}`.
+
+Le serveur borne la requête aux organisations actives, visibles et dont la vitrine est activée, aux villes actives, aux annonces publiées et aux unités encore disponibles sans bail actif. La requête exclut également les ressources supprimées logiquement et les unités supplémentaires des baux actifs. Aucun filtrage client ne remplace ces contrôles. Le catalogue public de l’accueil est chargé immédiatement sans filtre préalable ; les catégories et la page `/annonces` servent ensuite à affiner la recherche.
+
+Le workflow d’annonce fournit un type d’offre, un prix et une devise pour les locations comme pour les ventes. MaVitrine affiche ces champs et ne présente pas un prix de vente comme un loyer. Les favoris synchronisés et la réservation nécessitent un contrat serveur dédié.
+
+## Demandes client
+
+`POST /api/public/organizations/{slug}/listings/{unitUuid}/inquiries` accepte `type` (`information` ou `visit`), `name`, `phone`, `email` facultatif, `message` facultatif et `privacyConsent: true`. L’en-tête `Idempotency-Key` doit contenir un UUID. La première création renvoie 201 ; une répétition identique avec la même clé renvoie 200 et la même référence. Une clé réutilisée avec un autre contenu renvoie 409. Les champs invalides renvoient 422, une annonce inconnue ou devenue indisponible renvoie 404 et la limite de soumissions renvoie 429.
+
+Le backend dérive l’organisation depuis le slug et l’annonce, et n’accepte que les annonces publiques encore disponibles. La réponse publique ne contient que la référence de la demande et sa date de réception.
+
+Les routes de suivi sont authentifiées sous `/api/v1/organizations/{organizationUuid}/inquiries` : liste paginée et filtrée, détail, historique, prise en charge (`POST /{inquiryUuid}/take-ownership`) et transition (`POST /{inquiryUuid}/transition`). ADMIN_IMMOBILIER peut traiter les demandes de son organisation ; PATRON peut les lire ; ADMIN_VILLE ne reçoit pas de droit nouveau. Une clôture exige un motif. Les transitions vers conversion ou clôture sont terminales. La conversion ne crée pas de bail, de vente ni de réservation.

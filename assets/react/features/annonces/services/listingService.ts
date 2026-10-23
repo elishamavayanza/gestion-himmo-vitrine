@@ -1,11 +1,10 @@
-import { request } from '../../../services/api/client'
-import type { PublicListing } from '../../../services/api/publicShowcase.types'
+import { requestFeedbackData } from '../../../services/api/client'
+import { publicListingSchema, type PublicListing } from '../../../services/api/publicShowcase.types'
 
-interface Feedback<T> { data: T }
-
-export async function getPublicListing(slug: string, uuid: string): Promise<PublicListing> {
-  const response = await request<Feedback<PublicListing>>(
+export async function getPublicListing(slug: string, uuid: string, signal?: AbortSignal): Promise<PublicListing> {
+  return requestFeedbackData(
     `public/organizations/${encodeURIComponent(slug)}/listings/${encodeURIComponent(uuid)}`,
+    publicListingSchema,
+    { signal },
   )
-  return response.data
 }

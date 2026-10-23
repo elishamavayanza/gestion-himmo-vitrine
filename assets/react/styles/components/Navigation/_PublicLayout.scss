@@ -14,16 +14,16 @@
   justify-content: space-between;
   gap: 1.5rem;
   padding: 0.75rem max(1rem, calc((100vw - 72rem) / 2));
-  border-bottom: 1px solid var(--color-border);
-  background: color-mix(in srgb, var(--color-surface) 94%, transparent);
+  border-bottom: 1px solid var(--color-chrome-border);
+  background: linear-gradient(110deg, color-mix(in srgb, var(--color-chrome-start) 97%, transparent), color-mix(in srgb, var(--color-chrome-end) 94%, transparent));
   box-shadow: 0 0.4rem 1.25rem rgb(0 0 0 / 8%);
   backdrop-filter: blur(14px);
-  transition: background-color var(--transition-fast), border-color var(--transition-fast), box-shadow var(--transition-fast);
+  transition: background var(--transition-fast), border-color var(--transition-fast), box-shadow var(--transition-fast);
 }
 
 .public-header a { color: inherit; text-decoration: none; }
 .public-navigation { display: flex; align-items: center; gap: clamp(0.75rem, 2.3vw, 1.75rem); }
-.public-navigation a { color: var(--color-text-muted); font-size: 0.925rem; }
+.public-navigation a { color: var(--color-chrome-muted); font-size: 0.925rem; }
 .public-navigation a[aria-current="page"] { color: var(--color-primary); font-weight: 650; }
 .public-header__actions { display: flex; align-items: center; gap: 0.75rem; }
 .public-menu-toggle { display: none; }
@@ -34,17 +34,17 @@
 
 .brand { display: inline-flex; align-items: center; gap: 0.65rem; color: var(--color-text); font-weight: 750; letter-spacing: -0.02em; white-space: nowrap; }
 .brand-mark { width: 2rem; height: 2rem; display: grid; place-items: center; border-radius: 0.65rem; background: var(--color-primary); color: white; }
-.brand-light { color: var(--color-text-muted); font-weight: 500; }
+.brand-light { color: var(--color-chrome-muted); font-weight: 500; }
 
 .public-footer {
   display: grid;
   gap: 2rem;
   margin-top: auto;
   padding: 3rem max(1.25rem, calc((100vw - 72rem) / 2)) 1.25rem;
-  border-top: 1px solid var(--color-border);
-  color: var(--color-text-muted);
+  border-top: 1px solid var(--color-chrome-border);
+  color: var(--color-chrome-muted);
   font-size: 0.8rem;
-  background: var(--color-surface);
+  background: linear-gradient(125deg, var(--color-chrome-start) 0%, var(--color-chrome-end) 100%);
 }
 
 .public-footer__main {
@@ -55,15 +55,15 @@
   margin-inline: auto;
 }
 
-.public-footer__brand { color: var(--color-text); }
+.public-footer__brand { color: var(--color-chrome-text); }
 .public-footer__identity p { max-width: 24rem; margin: 1rem 0 0; line-height: 1.7; }
 .public-footer__links,
 .public-footer__contact { display: flex; align-items: flex-start; flex-direction: column; gap: 0.7rem; }
 .public-footer__links h2,
-.public-footer__contact h2 { margin: 0 0 0.25rem; color: var(--color-text); font-size: 0.9rem; font-weight: 700; }
+.public-footer__contact h2 { margin: 0 0 0.25rem; color: var(--color-chrome-text); font-size: 0.9rem; font-weight: 700; }
 .public-footer__links a,
 .public-footer__contact a,
-.public-footer__bottom a { color: var(--color-text-muted); text-decoration: none; }
+.public-footer__bottom a { color: var(--color-chrome-muted); text-decoration: none; }
 .public-footer__links a:hover,
 .public-footer__contact a:hover,
 .public-footer__bottom a:hover,
@@ -78,6 +78,6 @@
   width: min(100%, 72rem);
   margin: 0 auto;
   padding-top: 1rem;
-  border-top: 1px solid var(--color-border);
+  border-top: 1px solid var(--color-chrome-border);
   font-size: 0.75rem;
 }

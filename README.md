@@ -1,20 +1,20 @@
 # H‑Immo Vitrine
 
-Application web publique destinée aux personnes qui recherchent un logement ou un local. Elle présentera les annonces publiées dans H‑Immo et, après mise en place du contrat serveur correspondant, permettra d’envoyer une demande à l’organisation.
+Application web publique destinée aux personnes qui recherchent un logement ou un local. Elle affiche les annonces publiées dans H‑Immo et transmet les demandes d’information ou de visite au serveur.
 
 H‑Immo reste la source de vérité pour les organisations, les biens, leur disponibilité, les loyers et les publications. Cette vitrine ne possède pas de base de données métier.
 
 ## État actuel
 
-Le dépôt contient une vitrine React/Vite/TypeScript connectée aux routes publiques H‑Immo de présentation d’organisation, de catalogue paginé et de détail d’annonce. Le catalogue est actuellement consultable par slug d’organisation. La recherche multi-organisation, l’annuaire global et l’envoi de demandes restent à construire avec des endpoints backend dédiés.
+Le dépôt contient une vitrine React/Vite/TypeScript connectée aux routes publiques H‑Immo de présentation d’organisation, de catalogue paginé, de détail d’annonce et d’envoi de demandes. L’accueil charge immédiatement les annonces publiques de toutes les agences ; le catalogue global permet ensuite de filtrer les résultats. Les vitrines individuelles restent consultables par slug d’organisation.
 
-L’API H‑Immo possède déjà des routes publiques de consultation pour une vitrine d’organisation et ses annonces. Il n’existe pas encore de route publique de création de demande client. La documentation décrit donc le contrat disponible et marque explicitement les parcours à venir.
+L’API H‑Immo possède aussi une route publique de création de demande, avec validation, limitation de fréquence et idempotence. La documentation décrit les contrats disponibles et distingue les fonctions qui attendent encore des routes globales.
 
 ## Technologies
 
 - React 19 et TypeScript strict
 - Vite 8
-- React Router et TanStack Query sont installés pour les besoins des fonctionnalités à venir ; le squelette actuel ne les utilise pas encore.
+- React Router et TanStack Query gèrent la navigation et le chargement annulable des données.
 - Yarn et un fichier de verrouillage yarn.lock
 
 ## Démarrage local
@@ -33,7 +33,7 @@ Le serveur Vite écoute sur 127.0.0.1:5174. Son proxy transmet les requêtes /ap
     yarn lint
     yarn build
 
-Il n’y a pas encore de framework de tests automatisés configuré. Voir tests/README.md.
+Des tests de contrat Node.js vérifient notamment le format des montants et des demandes. Voir tests/README.md.
 
 ## Configuration
 
@@ -50,12 +50,12 @@ Les variables préfixées VITE_ sont intégrées au bundle et visibles par les v
         catalogue/         recherche, filtres et résultats
         annonces/          fiche d’une annonce
         organisations/     présentation publique d’une organisation
-        demandes/           futur parcours de contact/demande
+        demandes/           formulaire public d’information ou de visite
       components/           composants TSX avec index.ts, classés par famille
       services/api/         client HTTP et configuration API
       styles/               SCSS centralisé : base/, components/ et pages/
     public/                 ressources statiques
-    tests/                  vérifications automatisées à venir
+    tests/                  vérifications du contrat API public
     docs/                   architecture, API, configuration, sécurité et feuille de route
 
 Le code React vit dans assets/react ; il n’y a pas de dossier src/. L’alias TypeScript/Vite @ pointe vers assets/react.

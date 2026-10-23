@@ -4,7 +4,7 @@ import { Button } from '../../../components/UI/Button'
 import { EmptyState } from '../../../components/Feedback/EmptyState'
 import { useCatalogue } from '../hooks/useCatalogue'
 import type { ListingFilters } from '../types/listing.types'
-import { PUBLIC_LISTING_TYPES, type Currency, type ListingType } from '../../../services/api/publicShowcase.types'
+import { PUBLIC_LISTING_TYPES, type Currency, type ListingOfferType, type ListingType } from '../../../services/api/publicShowcase.types'
 import { CatalogueFilterForm, ListingCard } from '../components'
 import type { CatalogueFilterDraft } from '../hooks/useCatalogueFilters'
 
@@ -13,20 +13,26 @@ const isDecimalAmount = (value: string) => /^(?:0|[1-9]\d*)(?:\.\d{1,2})?$/.test
 
 export function CataloguePage() {
   const { slug = '' } = useParams()
+  const isGlobalCatalogue = !slug
   const [searchParams, setSearchParams] = useSearchParams()
   const filters = useMemo<ListingFilters>(() => {
     const rawPage = Number(searchParams.get('page') || 1)
     const page = Number.isSafeInteger(rawPage) && rawPage > 0 ? rawPage : 1
     const rawType = searchParams.get('type') ?? ''
+    const rawOfferType = searchParams.get('offerType') ?? ''
     const rawCurrency = searchParams.get('currency') ?? ''
+    const city = searchParams.get('city') ?? ''
     const bedrooms = searchParams.get('bedrooms') ?? ''
-    const minRent = searchParams.get('minRent') ?? ''
-    const maxRent = searchParams.get('maxRent') ?? ''
+    const minPrice = searchParams.get('minPrice') ?? searchParams.get('minRent') ?? ''
+    const maxPrice = searchParams.get('maxPrice') ?? searchParams.get('maxRent') ?? ''
+    const legacyRentFilter = searchParams.has('minRent') || searchParams.has('maxRent')
     return {
+      city: city || undefined,
       type: validTypes.has(rawType) ? rawType as ListingType : undefined,
       bedrooms: /^\d+$/.test(bedrooms) ? bedrooms : undefined,
-      minRent: isDecimalAmount(minRent) ? minRent : undefined,
-      maxRent: isDecimalAmount(maxRent) ? maxRent : undefined,
+      offerType: ['rent', 'sale'].includes(rawOfferType) ? rawOfferType as ListingOfferType : legacyRentFilter ? 'rent' : undefined,
+      minPrice: isDecimalAmount(minPrice) ? minPrice : undefined,
+      maxPrice: isDecimalAmount(maxPrice) ? maxPrice : undefined,
       currency: ['USD', 'CDF'].includes(rawCurrency) ? rawCurrency as Currency : undefined,
       page,
       limit: 12,
@@ -48,9 +54,9 @@ export function CataloguePage() {
       <header className="page-heading">
         <p className="eyebrow">Catalogue public</p>
         <h1>Trouvez un bien</h1>
-        <p>Parcourez les biens publiés et disponibles par cette organisation.</p>
+        <p>{isGlobalCatalogue ? 'Parcourez les annonces publiques disponibles auprès de toutes les agences partenaires.' : 'Parcourez les biens publiés et disponibles par cette organisation.'}</p>
       </header>
-      <CatalogueFilterForm key={searchParams.toString()} initial={filters} onApply={applyFilters} />
+      <CatalogueFilterForm key={searchParams.toString()} initial={filters} onApply={applyFilters} globalScope={isGlobalCatalogue} />
       {loading && <p className="status-message" role="status">Chargement des annonces…</p>}
       {error && <EmptyState title="Annonces indisponibles" description={error} action={<Button onClick={retry}>Réessayer</Button>} />}
       {!loading && !error && result && (

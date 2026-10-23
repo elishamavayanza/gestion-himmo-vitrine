@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" fill="none">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#365e59"/><stop offset="1" stop-color="#9ab7a9"/></linearGradient>
+    <linearGradient id="building" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#e7e4d8"/><stop offset="1" stop-color="#b9c8bc"/></linearGradient>
+  </defs>
+  <path fill="url(#sky)" d="M0 0h1600v900H0z"/><circle cx="1260" cy="176" r="92" fill="#e9c98d" opacity=".82"/>
+  <path fill="#587c70" d="M0 600h1600v300H0z"/><path fill="#28433d" d="M0 730h1600v170H0z" opacity=".55"/>
+  <path fill="url(#building)" d="M310 270h810v460H310z"/><path fill="#315f55" d="M250 248h930v42H250zM360 320h700v22H360zM360 710h760v36H360z"/>
+  <g fill="#608f88"><path d="M405 380h102v104H405zM550 380h102v104H550zM695 380h102v104H695zM840 380h102v104H840zM985 380h70v104h-70z"/><path d="M405 518h102v104H405zM550 518h102v104H550zM695 518h102v104H695zM840 518h102v104H840zM985 518h70v104h-70z"/></g>
+  <path fill="#725b49" d="M720 594h116v136H720z"/>
+</svg>
