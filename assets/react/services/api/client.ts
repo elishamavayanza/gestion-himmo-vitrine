@@ -1,4 +1,4 @@
-import { z } from 'zod'
+import { z, type ZodMiniType } from 'zod/mini'
 import { ApiError } from './api.types.ts'
 import { getApiBaseUrl } from './config.ts'
 
@@ -29,7 +29,16 @@ export async function request<T>(path: string, options: RequestOptions = {}): Pr
 }
 
 /** Vérifie l'enveloppe Feedback au lieu de faire confiance au type de la réponse HTTP. */
-export async function requestFeedbackData<T>(path: string, dataSchema: z.ZodType<T>, options: RequestOptions = {}): Promise<T> {
+export async function requestFeedbackData<T>(path: string, dataSchema: ZodMiniType<T>, options: RequestOptions = {}): Promise<T> {
   const response = await request<unknown>(path, options)
-  return z.object({ data: dataSchema }).parse(response).data
+  try {
+    return z.object({ data: dataSchema }).parse(response).data
+  } catch (error) {
+    // Zod Mini expose le même type d’erreur sous le nom interne `$ZodError`.
+    // Garder le nom historique évite de changer le contrat consommé par les appelants.
+    if (error && typeof error === 'object' && 'issues' in error) {
+      Object.defineProperty(error, 'name', { value: 'ZodError', configurable: true })
+    }
+    throw error
+  }
 }

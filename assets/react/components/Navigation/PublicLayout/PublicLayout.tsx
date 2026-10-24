@@ -25,7 +25,7 @@ export function PublicLayout({ children, ...options }: PublicLayoutProps) {
           <NavLink end to={organizationHref ?? '/'} onClick={layout.closeMenu}>{layout.homeLabel}</NavLink>
           {organizationHref && <NavLink to={`${organizationHref}/annonces`} onClick={layout.closeMenu}>Trouver un bien</NavLink>}
           <NavLink to="/a-propos" onClick={layout.closeMenu}>À propos</NavLink>
-          {organizationHref && <a href={`${organizationHref}#contact`} onClick={layout.closeMenu}>Contact</a>}
+          {organizationHref && <NavLink to={`${organizationHref}/contact`} onClick={layout.closeMenu}>Contact</NavLink>}
         </nav>
         <div className="public-header__actions">
           <ThemeToggle />
@@ -55,7 +55,7 @@ export function PublicLayout({ children, ...options }: PublicLayoutProps) {
             {organizationHref ? (
               <>
                 <p>Pour une question sur un bien, contactez directement l’agence.</p>
-                <a href={`${organizationHref}#contact`}>Coordonnées de l’agence</a>
+                <Link to={`${organizationHref}/contact`}>Coordonnées de l’agence</Link>
               </>
             ) : (
               <>

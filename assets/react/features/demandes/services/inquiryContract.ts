@@ -9,11 +9,15 @@ export interface InquiryFields {
   privacyConsent: boolean
 }
 
+export function publicInquiryChallengePath(slug: string, unitUuid: string): string {
+  return `${publicInquiryPath(slug, unitUuid)}/challenge`
+}
+
 export function publicInquiryPath(slug: string, unitUuid: string): string {
   return `public/organizations/${encodeURIComponent(slug)}/listings/${encodeURIComponent(unitUuid)}/inquiries`
 }
 
-export function buildInquiryPayload(fields: InquiryFields): CustomerInquiryRequest {
+export function buildInquiryPayload(fields: InquiryFields, challengeToken: string, website = '', turnstileToken: string | null = null): CustomerInquiryRequest {
   return {
     type: fields.type,
     name: fields.name.trim(),
@@ -21,5 +25,8 @@ export function buildInquiryPayload(fields: InquiryFields): CustomerInquiryReque
     ...(fields.email.trim() ? { email: fields.email.trim() } : {}),
     ...(fields.message.trim() ? { message: fields.message.trim() } : {}),
     privacyConsent: fields.privacyConsent,
+    challengeToken,
+    website,
+    turnstileToken,
   }
 }

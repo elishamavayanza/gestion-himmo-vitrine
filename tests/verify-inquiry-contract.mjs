@@ -3,8 +3,8 @@ import test from 'node:test'
 import { buildInquiryPayload, publicInquiryPath } from '../assets/react/features/demandes/services/inquiryContract.ts'
 
 test('le contrat transmet le type, retire les espaces et omet les champs facultatifs vides', () => {
-  assert.deepEqual(buildInquiryPayload({ type: 'visit', name: '  Amina  ', phone: ' +243 000 ', email: '', message: '  ', privacyConsent: true }), {
-    type: 'visit', name: 'Amina', phone: '+243 000', privacyConsent: true,
+  assert.deepEqual(buildInquiryPayload({ type: 'visit', name: '  Amina  ', phone: ' +243 000 ', email: '', message: '  ', privacyConsent: true }, 'jeton-signe', '', 'turnstile-test-token'), {
+    type: 'visit', name: 'Amina', phone: '+243 000', privacyConsent: true, challengeToken: 'jeton-signe', website: '', turnstileToken: 'turnstile-test-token',
   })
 })
 

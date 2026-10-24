@@ -9,7 +9,10 @@
     "lint": "oxlint",
     "preview": "vite preview",
     "type-check": "tsc -b --pretty",
-    "test:public-listings": "node --experimental-strip-types --test tests/verify-public-listing-price.mjs tests/verify-inquiry-contract.mjs tests/verify-public-api-schema.mjs tests/verify-public-api-client.mjs tests/verify-catalogue-query.mjs tests/verify-catalogue-grouping.mjs"
+    "test:public-listings": "node --experimental-strip-types --test tests/verify-public-listing-price.mjs tests/verify-inquiry-contract.mjs tests/verify-public-api-schema.mjs tests/verify-public-api-client.mjs tests/verify-catalogue-query.mjs tests/verify-catalogue-grouping.mjs tests/verify-sitemap.mjs tests/verify-rendered-pages.mjs",
+    "generate:sitemap": "node scripts/generate-sitemap.mjs",
+    "start": "node scripts/server.mjs",
+    "test:rendered-pages": "node --experimental-strip-types --test tests/verify-rendered-pages.mjs"
   },
   "dependencies": {
     "@hookform/resolvers": "^6.0.0",

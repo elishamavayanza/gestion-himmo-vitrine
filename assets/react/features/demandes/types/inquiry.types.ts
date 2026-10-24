@@ -1,10 +1,10 @@
-import { z } from 'zod'
+import { z, type infer as ZodInfer } from 'zod/mini'
 
 export type CustomerInquiryType = 'information' | 'visit'
 
 export const customerInquiryReceiptSchema = z.object({
-  reference: z.string().min(1),
-  receivedAt: z.string().min(1),
+  reference: z.string().check(z.minLength(1)),
+  receivedAt: z.string().check(z.minLength(1)),
 })
 
 export interface CustomerInquiryRequest {
@@ -14,6 +14,12 @@ export interface CustomerInquiryRequest {
   email?: string
   message?: string
   privacyConsent: boolean
+  challengeToken: string
+  website: string
+  turnstileToken: string | null
 }
 
-export type CustomerInquiryReceipt = z.infer<typeof customerInquiryReceiptSchema>
+export const publicInquiryChallengeSchema = z.object({ token: z.string().check(z.minLength(1), z.maxLength(200)) })
+export type PublicInquiryChallenge = ZodInfer<typeof publicInquiryChallengeSchema>
+
+export type CustomerInquiryReceipt = ZodInfer<typeof customerInquiryReceiptSchema>

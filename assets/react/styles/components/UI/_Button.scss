@@ -1,4 +1,5 @@
 .ui-button {
+  position: relative;
   display: inline-flex;
   min-height: 2.75rem;
   align-items: center;
@@ -11,12 +12,14 @@
   line-height: 1.2;
   text-decoration: none;
   cursor: pointer;
-  transition: color var(--transition-fast), background-color var(--transition-fast),
-    border-color var(--transition-fast), transform var(--transition-fast), box-shadow var(--transition-fast);
+  transition: color 220ms ease, background 260ms ease, border-color 220ms ease,
+    transform 260ms cubic-bezier(0.2, 0.75, 0.25, 1), box-shadow 260ms ease;
 }
 
-.ui-button:hover:not(:disabled) { transform: translateY(-1px); }
-.ui-button:active:not(:disabled) { transform: translateY(0); }
+.ui-button::after { position: absolute; pointer-events: none; content: ''; inset: -2px; border: 1px solid color-mix(in srgb, currentColor 38%, transparent); border-radius: inherit; opacity: 0; transform: scale(0.96); transition: opacity 220ms ease, transform 260ms cubic-bezier(0.2, 0.75, 0.25, 1); }
+.ui-button:hover:not(:disabled), .ui-button:focus-visible { z-index: 1; transform: translateY(-2px) scale(1.02); box-shadow: 0 9px 20px color-mix(in srgb, var(--color-primary) 22%, transparent); }
+.ui-button:hover:not(:disabled)::after, .ui-button:focus-visible::after { opacity: 0.8; transform: scale(1); }
+.ui-button:active:not(:disabled) { transform: translateY(0) scale(0.985); box-shadow: 0 3px 8px color-mix(in srgb, var(--color-primary) 18%, transparent); }
 .ui-button:disabled { cursor: not-allowed; opacity: 0.55; }
 .ui-button__icon { display: inline-flex; align-items: center; }
 
@@ -24,7 +27,7 @@
   color: var(--color-on-primary);
   background: var(--color-primary);
 }
-.ui-button--primary:hover:not(:disabled) { background: var(--color-primary-hover); }
+.ui-button--primary:hover:not(:disabled), .ui-button--primary:focus-visible { color: var(--color-on-primary); background: linear-gradient(125deg, var(--color-primary-hover), color-mix(in srgb, var(--color-primary-hover) 82%, var(--color-accent))); box-shadow: 0 10px 24px color-mix(in srgb, var(--color-primary) 32%, transparent), inset 0 1px 0 rgb(255 255 255 / 18%); }
 
 .ui-button--secondary {
   color: var(--color-text);
@@ -32,8 +35,10 @@
   border-color: var(--color-border-strong);
 }
 .ui-button--secondary:hover:not(:disabled) {
-  background: var(--color-primary-soft);
+  color: var(--color-primary);
+  background: linear-gradient(125deg, var(--color-primary-soft), color-mix(in srgb, var(--color-surface-raised) 70%, var(--color-primary-soft)));
   border-color: var(--color-primary);
+  box-shadow: 0 8px 18px color-mix(in srgb, var(--color-primary) 17%, transparent);
 }
 
 .ui-button--quiet {
@@ -50,6 +55,7 @@
   background: var(--color-danger-soft);
   border-color: color-mix(in srgb, var(--color-danger), transparent 72%);
 }
+.ui-button--danger:hover:not(:disabled), .ui-button--danger:focus-visible { color: var(--color-danger); }
 
 .ui-button--small { min-height: 2.25rem; padding: 0.45rem 0.75rem; font-size: var(--font-size-sm); }
 .ui-button--large { min-height: 3.25rem; padding: 0.85rem 1.25rem; }
@@ -68,5 +74,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .ui-button, .ui-button::after { transition: none; }
+  .ui-button:hover:not(:disabled), .ui-button:focus-visible, .ui-button:active:not(:disabled) { transform: none; }
   .ui-button__spinner { animation-duration: 2s; }
 }

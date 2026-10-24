@@ -18,7 +18,7 @@ export function HomeCatalogueSection() {
   const { result, loading, error, retry } = useCatalogue('', { page: 1, limit: 8 })
 
   return (
-    <section className="home-catalogue" aria-labelledby="home-catalogue-title">
+    <section className="home-catalogue" aria-labelledby="home-catalogue-title" aria-busy={loading}>
       <div className="home-catalogue__heading">
         <p className="eyebrow">Annonces publiques</p>
         <h2 id="home-catalogue-title">Les biens disponibles maintenant</h2>

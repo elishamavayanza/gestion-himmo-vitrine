@@ -1,7 +1,7 @@
-import { useRef, useState, type FormEvent } from 'react'
-import { useMutation } from '@tanstack/react-query'
+import { useCallback, useRef, useState, type FormEvent } from 'react'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import { ApiError } from '../../../services/api/api.types'
-import { createPublicInquiry } from '../services/inquiryService'
+import { createPublicInquiry, getPublicInquiryChallenge } from '../services/inquiryService'
 import type { CustomerInquiryRequest, CustomerInquiryType } from '../types/inquiry.types'
 import { buildInquiryPayload } from '../services/inquiryContract'
 
@@ -18,7 +18,8 @@ const initialFields: InquiryFormFields = {
   type: 'information', name: '', phone: '', email: '', message: '', privacyConsent: false,
 }
 
-export function useInquiryForm(slug: string, unitUuid: string) {
+export function useInquiryForm(slug: string, unitUuid: string, turnstileToken: string | null) {
+  const challenge = useQuery({ queryKey: ['public-inquiry-challenge', slug, unitUuid], queryFn: ({ signal }) => getPublicInquiryChallenge(slug, unitUuid, signal), enabled: Boolean(slug && unitUuid), staleTime: 20 * 60 * 1000, retry: 1 })
   const [fields, setFields] = useState(initialFields)
   const idempotencyKey = useRef<string | null>(null)
   const mutation = useMutation({
@@ -36,13 +37,18 @@ export function useInquiryForm(slug: string, unitUuid: string) {
     event.preventDefault()
     mutation.reset()
     idempotencyKey.current ??= globalThis.crypto.randomUUID()
-    const payload = buildInquiryPayload(fields)
+    if (!challenge.data?.token) return
+    const website = String(new FormData(event.currentTarget).get('website') ?? '')
+    const payload = buildInquiryPayload(fields, challenge.data.token, website, turnstileToken)
     try {
       await mutation.mutateAsync({ payload, key: idempotencyKey.current })
     } catch {
       // L’erreur est rendue depuis l’état de la mutation, sans rejet non géré.
     }
   }
+
+  const refetchChallenge = challenge.refetch
+  const refreshChallenge = useCallback(() => { void refetchChallenge() }, [refetchChallenge])
 
   const error = mutation.error instanceof ApiError
     ? mutation.error.status === 404
@@ -51,6 +57,8 @@ export function useInquiryForm(slug: string, unitUuid: string) {
         ? 'Vérifiez les champs et confirmez votre accord avant de réessayer.'
         : mutation.error.status === 429
           ? 'Trop de demandes ont été envoyées. Réessayez un peu plus tard.'
+          : mutation.error.status === 400
+          ? 'La vérification a échoué ou expiré. Rechargez le formulaire puis réessayez.'
           : mutation.error.status === 409
             ? 'Cette demande a déjà été transmise. Modifiez le formulaire si vous souhaitez envoyer une autre demande.'
             : 'Votre demande n’a pas pu être envoyée. Vérifiez votre connexion puis réessayez.'
@@ -58,5 +66,5 @@ export function useInquiryForm(slug: string, unitUuid: string) {
       ? 'Votre demande n’a pas pu être envoyée. Vérifiez votre connexion puis réessayez.'
       : null
 
-  return { fields, change, submit, pending: mutation.isPending, sent: mutation.isSuccess, error }
+  return { fields, change, submit, pending: mutation.isPending, sent: mutation.isSuccess, error, challengeLoading: challenge.isPending, challengeError: challenge.isError, challengeReady: Boolean(challenge.data?.token), refreshChallenge }
 }

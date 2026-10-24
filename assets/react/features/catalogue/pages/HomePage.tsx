@@ -1,3 +1,4 @@
+import { usePublicSeo } from '../../../services/seo'
 import { useState, type FormEvent } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Button } from '../../../components/UI/Button'
@@ -6,7 +7,7 @@ import { TextField } from '../../../components/Form/TextField'
 import type { Currency, ListingOfferType } from '../../../services/api/publicShowcase.types'
 import { Minus, Plus, Search } from 'lucide-react'
 import { HomeCatalogueSection } from '../components'
-import { heroSlides, useHeroSlideshow } from '../hooks/useHeroSlideshow'
+import { heroSlideSrcSet, heroSlides, useHeroSlideshow } from '../hooks/useHeroSlideshow'
 
 const decimalPattern = /^(?:0|[1-9]\d*)(?:\.\d{1,2})?$/
 const toMinorUnits = (value: string) => {
@@ -25,6 +26,12 @@ export function HomePage() {
   const [filtersExpanded, setFiltersExpanded] = useState(false)
   const navigate = useNavigate()
   const slideshow = useHeroSlideshow()
+  usePublicSeo({
+    title: 'Annonces immobilières disponibles',
+    description: 'Découvrez les maisons, appartements, terrains et locaux publiés par les agences partenaires H‑Immo.',
+    canonicalPath: '/',
+    structuredData: { '@context': 'https://schema.org', '@type': 'WebSite', name: 'H‑Immo Habitat', url: window.location.origin, inLanguage: 'fr' },
+  })
 
   function searchListings(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -71,11 +78,13 @@ export function HomePage() {
     <main className="home-page">
       <section className="home-hero" aria-labelledby="welcome-title">
         <div className="home-hero__slides" aria-hidden="true">
-          {heroSlides.map((slide, index) => (
+          {heroSlides.map((slide, index) => slideshow.loadedSlides.includes(index) && (
             <img
               key={slide.src}
               className={`home-hero__image${index === slideshow.activeIndex ? ' home-hero__image--active' : ''}${slideshow.failedSlides.includes(index) ? ' home-hero__image--failed' : ''}`}
               src={slide.src}
+              srcSet={heroSlideSrcSet(slide.src)}
+              sizes="100vw"
               alt=""
               fetchPriority={index === 0 ? 'high' : 'auto'}
               loading={index === 0 ? 'eager' : 'lazy'}

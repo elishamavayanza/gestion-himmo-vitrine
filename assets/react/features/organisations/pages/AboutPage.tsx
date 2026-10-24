@@ -1,4 +1,6 @@
+import { usePublicSeo } from '../../../services/seo'
 export function AboutPage() {
+  usePublicSeo({ title: 'À propos de H‑Immo Habitat', description: 'Découvrez comment H‑Immo Habitat présente les annonces publiques de ses agences partenaires.', canonicalPath: '/a-propos' })
   return (
     <main className="public-page about-page">
       <header className="page-heading"><p className="eyebrow">À propos</p><h1>Une vitrine commune, des agences indépendantes</h1><p>H‑Immo Vitrine rassemble les annonces que les organisations partenaires choisissent de rendre publiques. Chaque agence reste responsable des biens qu’elle publie.</p></header>

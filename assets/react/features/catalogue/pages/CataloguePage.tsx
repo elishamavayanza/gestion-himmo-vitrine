@@ -1,3 +1,4 @@
+import { usePublicSeo } from '../../../services/seo'
 import { useCallback, useMemo } from 'react'
 import { useParams, useSearchParams } from 'react-router-dom'
 import { Button } from '../../../components/UI/Button'
@@ -39,6 +40,13 @@ export function CataloguePage() {
     }
   }, [searchParams])
   const { result, loading, error, retry } = useCatalogue(slug, filters)
+  const canonicalPath = isGlobalCatalogue ? '/annonces' : `/organisations/${encodeURIComponent(slug)}/annonces`
+  usePublicSeo({
+    title: isGlobalCatalogue ? 'Toutes les annonces immobilières' : `Annonces immobilières de ${slug}`,
+    description: isGlobalCatalogue ? 'Parcourez les annonces immobilières publiées et disponibles auprès des agences partenaires H‑Immo.' : `Consultez les biens publiés et disponibles par ${slug} sur H‑Immo Habitat.`,
+    canonicalPath,
+    noIndex: searchParams.size > 0,
+  })
 
   const applyFilters = useCallback((draft: CatalogueFilterDraft) => {
     const next = new URLSearchParams()
@@ -50,7 +58,7 @@ export function CataloguePage() {
   const clearFilters = useCallback(() => { setSearchParams({ page: '1' }) }, [setSearchParams])
 
   return (
-    <main className="public-page catalogue-page">
+    <main className="public-page catalogue-page" aria-busy={loading}>
       <header className="page-heading">
         <p className="eyebrow">Catalogue public</p>
         <h1>Trouvez un bien</h1>
@@ -62,7 +70,7 @@ export function CataloguePage() {
       {!loading && !error && result && (
         <>
           <div className="catalogue-summary"><p>{result.total} annonce{result.total > 1 ? 's' : ''} disponible{result.total > 1 ? 's' : ''}</p><p>Page {result.page} sur {result.pages}</p></div>
-          {result.items.length === 0 ? <EmptyState title="Aucun bien pour ces critères" description="Essayez d’élargir votre recherche ou d’effacer certains filtres." action={<Button variant="secondary" onClick={clearFilters}>Effacer les filtres</Button>} /> : <div className="listing-grid">{result.items.map((listing) => <ListingCard key={listing.unitId} slug={slug} listing={listing} />)}</div>}
+          {result.items.length === 0 ? <EmptyState title="Aucun bien pour ces critères" description="Essayez d’élargir votre recherche ou d’effacer certains filtres." action={<Button variant="secondary" onClick={clearFilters}>Effacer les filtres</Button>} /> : <div className="listing-grid">{result.items.map((listing, index) => <ListingCard key={listing.unitId} slug={slug} listing={listing} eager={index === 0} headingLevel="h2" />)}</div>}
           {result.pages > 1 && <nav className="pagination" aria-label="Pagination des annonces"><Button variant="secondary" disabled={result.page <= 1} onClick={() => setSearchParams({ ...Object.fromEntries(searchParams), page: String(result.page - 1) })}>Précédent</Button><span>Page {result.page} / {result.pages}</span><Button variant="secondary" disabled={result.page >= result.pages} onClick={() => setSearchParams({ ...Object.fromEntries(searchParams), page: String(result.page + 1) })}>Suivant</Button></nav>}
         </>
       )}
