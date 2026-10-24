@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react'
 import { Link, NavLink } from 'react-router-dom'
 import { ThemeToggle } from '../../UI/ThemeToggle'
+import { BrandLogo } from '../../BrandLogo'
 import { usePublicLayout, type PublicLayoutOptions } from './usePublicLayout'
 
 interface PublicLayoutProps extends PublicLayoutOptions {
@@ -9,6 +10,7 @@ interface PublicLayoutProps extends PublicLayoutOptions {
 
 export function PublicLayout({ children, ...options }: PublicLayoutProps) {
   const layout = usePublicLayout(options)
+  const visibleBrandName = layout.brandName.replace(/^H/, '')
   const organizationHref = layout.organizationSlug
     ? `/organisations/${encodeURIComponent(layout.organizationSlug)}`
     : null
@@ -18,14 +20,13 @@ export function PublicLayout({ children, ...options }: PublicLayoutProps) {
       <a className="skip-link" href="#main-content">Passer au contenu</a>
       <header id="page-top" className="public-header" onKeyDown={layout.onMenuKeyDown}>
         <Link className="brand" to={layout.homeHref} aria-label={`${layout.brandName} ${layout.brandSuffix}, ${layout.homeLabel.toLowerCase()}`}>
-          <span className="brand-mark" aria-hidden="true">H</span>
-          <span>{layout.brandName} <span className="brand-light">{layout.brandSuffix}</span></span>
+          <BrandLogo className="brand-mark" />
+          <span className="brand__text">{visibleBrandName} <span className="brand-light">{layout.brandSuffix}</span></span>
         </Link>
         <nav id="public-navigation" className={`public-navigation${layout.menuOpen ? ' public-navigation--open' : ''}`} aria-label="Navigation principale">
-          <NavLink end to={organizationHref ?? '/'} onClick={layout.closeMenu}>{layout.homeLabel}</NavLink>
-          {organizationHref && <NavLink to={`${organizationHref}/annonces`} onClick={layout.closeMenu}>Trouver un bien</NavLink>}
+          <NavLink end to="/" onClick={layout.closeMenu}>{layout.homeLabel}</NavLink>
+          <NavLink to="/annonces" onClick={layout.closeMenu}>Toutes les annonces</NavLink>
           <NavLink to="/a-propos" onClick={layout.closeMenu}>À propos</NavLink>
-          {organizationHref && <NavLink to={`${organizationHref}/contact`} onClick={layout.closeMenu}>Contact</NavLink>}
         </nav>
         <div className="public-header__actions">
           <ThemeToggle />
@@ -34,13 +35,23 @@ export function PublicLayout({ children, ...options }: PublicLayoutProps) {
           </button>
         </div>
       </header>
+      {organizationHref && (
+        <nav className="organization-navigation" aria-label="Navigation de la vitrine">
+          <span className="organization-navigation__label">Espace de l’agence</span>
+          <div className="organization-navigation__links">
+            <NavLink end to={organizationHref}>Accueil agence</NavLink>
+            <NavLink to={`${organizationHref}/annonces`}>Annonces de l’agence</NavLink>
+            <NavLink to={`${organizationHref}/contact`}>Contact agence</NavLink>
+          </div>
+        </nav>
+      )}
       <div id="main-content" className="public-layout__content" tabIndex={-1}>{children}</div>
       <footer className="public-footer">
         <div className="public-footer__main">
           <section className="public-footer__identity" aria-label={`${layout.brandName} ${layout.brandSuffix}`}>
             <Link className="brand public-footer__brand" to={layout.homeHref}>
-              <span className="brand-mark" aria-hidden="true">H</span>
-              <span>{layout.brandName} <span className="brand-light">{layout.brandSuffix}</span></span>
+              <BrandLogo className="brand-mark" />
+              <span className="brand__text">{visibleBrandName} <span className="brand-light">{layout.brandSuffix}</span></span>
             </Link>
             <p>{layout.footerMessage}</p>
           </section>
@@ -48,7 +59,7 @@ export function PublicLayout({ children, ...options }: PublicLayoutProps) {
             <h2>Explorer</h2>
             <Link to={organizationHref ?? '/'}>{layout.homeLabel}</Link>
             <Link to="/a-propos">À propos</Link>
-            {organizationHref && <Link to={`${organizationHref}/annonces`}>Trouver un bien</Link>}
+            {organizationHref && <Link to={`${organizationHref}/annonces`}>Annonces de l’agence</Link>}
           </nav>
           <section className="public-footer__contact">
             <h2>{organizationHref ? 'Contacter cette agence' : 'Besoin d’un renseignement ?'}</h2>

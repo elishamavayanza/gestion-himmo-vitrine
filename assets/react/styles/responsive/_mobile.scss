@@ -2,6 +2,8 @@
 
 // Téléphones et navigation compacte.
 @media (max-width: bp.$breakpoint-mobile-navigation) {
+  .public-layout { --public-header-height: 4.25rem; }
+
   .public-header {
     min-height: 0;
     align-items: center;
@@ -13,6 +15,20 @@
   .public-footer {
     padding: 2rem 1rem 1rem;
   }
+
+  .organization-navigation {
+    min-height: 2.75rem;
+    justify-content: flex-start;
+    gap: 0.6rem;
+    overflow-x: auto;
+    padding-inline: 0.75rem;
+    scrollbar-width: none;
+  }
+
+  .organization-navigation::-webkit-scrollbar { display: none; }
+  .organization-navigation__label { display: none; }
+  .organization-navigation__links { flex: 0 0 auto; }
+  .organization-navigation__links a { padding: 0.4rem 0.7rem; font-size: 0.82rem; }
 
   .public-footer__main { grid-template-columns: 1fr 1fr; gap: 1.5rem; }
   .public-footer__identity { grid-column: 1 / -1; }

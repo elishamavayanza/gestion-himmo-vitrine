@@ -1,9 +1,11 @@
 import { usePublicSeo } from '../../../services/seo'
+import { useMemo } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { Button } from '../../../components/UI/Button'
 import { EmptyState } from '../../../components/Feedback/EmptyState'
 import { formatPublicListingPrice } from '../../../services/publicListingPresentation'
 import { useOrganizationListingPreview } from '../hooks/useOrganizationListingPreview'
+import { useOrganizationHeroSlideshow } from '../hooks/useOrganizationHeroSlideshow'
 import { useOrganizationShowcase } from '../hooks/useOrganizationShowcase'
 
 const organizationTypeLabels: Record<string, string> = {
@@ -16,6 +18,20 @@ export function OrganizationShowcasePage() {
   const { organization, loading, error } = useOrganizationShowcase(slug)
   const preview = useOrganizationListingPreview(slug)
   const organizationPath = `/organisations/${encodeURIComponent(slug)}`
+  const heroImages = useMemo(() => {
+    const seen = new Set<string>()
+    const images: string[] = []
+    for (const listing of preview.listings) {
+      for (const photo of [...listing.photos].sort((a, b) => a.position - b.position)) {
+        if (seen.has(photo.url)) continue
+        seen.add(photo.url)
+        images.push(photo.url)
+        if (images.length === 6) return images
+      }
+    }
+    return images
+  }, [preview.listings])
+  const slideshow = useOrganizationHeroSlideshow(heroImages)
   usePublicSeo({
     title: organization?.name ? `Vitrine de ${organization.name}` : 'Vitrine immobilière partenaire',
     description: organization?.description || (organization ? `Découvrez les annonces immobilières publiées par ${organization.name}${organization.city ? ` à ${organization.city}` : ''}.` : 'Découvrez les annonces des agences partenaires H‑Immo.'),
@@ -31,19 +47,33 @@ export function OrganizationShowcasePage() {
   const location = [organization.city, organization.country].filter(Boolean).join(', ')
   return (
     <main className="public-page organization-page" aria-busy={preview.loading}>
-      <section className="organization-hero" aria-labelledby="organization-title">
-        {organization.logo ? <img className="organization-hero__logo" src={organization.logo} alt={`Logo de ${organization.name}`} /> : <span className="organization-hero__mark" aria-hidden="true">{organization.name.slice(0, 1)}</span>}
-        <div className="organization-hero__identity"><p className="eyebrow">Vitrine partenaire</p><h1 id="organization-title">{organization.name}</h1><p>{location || 'Agence immobilière partenaire H‑Immo'}</p></div>
-        <div className="organization-hero__actions"><span>{organization.availableUnitsCount} bien{organization.availableUnitsCount > 1 ? 's' : ''} disponible{organization.availableUnitsCount > 1 ? 's' : ''}</span><Link className="ui-button ui-button--primary" to={`${organizationPath}/annonces`}>Voir les annonces</Link><Link className="organization-hero__contact-link" to={`${organizationPath}/contact`}>Contacter l’agence</Link></div>
+      <section className="organization-showcase-hero" aria-labelledby="organization-title">
+        <div className="organization-showcase-hero__slides" aria-hidden="true">
+          {heroImages.map((image, index) => !slideshow.failedImages.has(index) && (
+            <img key={image} className={`organization-showcase-hero__image${index === slideshow.activeIndex ? ' organization-showcase-hero__image--active' : ''}`} src={image} alt="" loading={index === 0 ? 'eager' : 'lazy'} fetchPriority={index === 0 ? 'high' : 'auto'} onError={() => slideshow.markImageFailed(index)} />
+          ))}
+        </div>
+        <div className="organization-showcase-hero__decor" aria-hidden="true" />
+        <div className="organization-showcase-hero__copy">
+          <p className="eyebrow">Vitrine partenaire{organization.city ? ` · ${organization.city}` : ''}</p>
+          <h1 id="organization-title">{organization.name}</h1>
+          <p className="organization-showcase-hero__description">{organization.description || `Découvrez les biens immobiliers proposés par ${organization.name}${location ? ` à ${location}` : ''}.`}</p>
+        </div>
+        <aside className="organization-showcase-hero__panel" aria-label="Annonces de l’agence">
+          {organization.logo ? <img className="organization-showcase-hero__logo" src={organization.logo} alt="" /> : <span className="organization-showcase-hero__mark" aria-hidden="true">{organization.name.slice(0, 1)}</span>}
+          <div><span className="organization-showcase-hero__count">{organization.availableUnitsCount}</span><span className="organization-showcase-hero__count-label">bien{organization.availableUnitsCount === 1 ? '' : 's'} disponible{organization.availableUnitsCount === 1 ? '' : 's'}</span></div>
+          <Link className="ui-button ui-button--primary" to={`${organizationPath}/annonces`}>Explorer les annonces</Link>
+        </aside>
       </section>
 
+      <div className="organization-home-sections">
       <section className="organization-profile" aria-labelledby="organization-profile-title">
-        <div className="organization-profile__intro"><p className="eyebrow">L’agence</p><h2 id="organization-profile-title">Votre partenaire immobilier{organization.city ? ` à ${organization.city}` : ''}</h2><p>{organization.description || `Découvrez les biens sélectionnés par ${organization.name} et trouvez une offre qui correspond à votre projet.`}</p></div>
-        <dl className="organization-profile__facts">
-          <div><dt>Zone d’activité</dt><dd>{location || 'RDC'}</dd></div>
-          {organization.address && <div><dt>Adresse</dt><dd>{organization.address}</dd></div>}
-          <div><dt>Annonces disponibles</dt><dd>{organization.availableUnitsCount}</dd></div>
-        </dl>
+        <div className="organization-profile__intro"><p className="eyebrow">Votre parcours</p><h2 id="organization-profile-title">Trouvez le bien qui vous correspond</h2><p>Parcourez la sélection de l’agence, comparez les informations utiles et contactez-la au sujet d’une annonce précise.</p></div>
+        <div className="organization-profile__journey" aria-label="Étapes pour trouver un bien">
+          <article><span aria-hidden="true">01</span><h3>Explorez les annonces</h3><p>Parcourez les biens actuellement publiés par l’agence.</p></article>
+          <article><span aria-hidden="true">02</span><h3>Comparez les détails</h3><p>Consultez les photos, les prix et les caractéristiques de chaque bien.</p></article>
+          <article><span aria-hidden="true">03</span><h3>Demandez une visite</h3><p>Depuis une annonce, envoyez une demande liée au bien qui vous intéresse.</p></article>
+        </div>
       </section>
 
       <section className="organization-listings" aria-labelledby="organization-listings-title">
@@ -68,6 +98,7 @@ export function OrganizationShowcasePage() {
           </div>
         )}
       </section>
+      </div>
     </main>
   )
 }
